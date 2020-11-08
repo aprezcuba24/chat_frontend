@@ -15,6 +15,10 @@ export const SecurityContextProvider = ({ children, ...props }) => {
     setIsAuthenticated(true);
     localStorage.setItem('token', token);
   }, []);
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  }, [])
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -27,6 +31,7 @@ export const SecurityContextProvider = ({ children, ...props }) => {
       isAuthenticated,
       login,
       loadTokenByWorkspace,
+      logout,
     }}>
       {children}
     </SecurityContext.Provider>
@@ -47,5 +52,6 @@ export const useSecurityContext = () => {
     isAuthenticated: ctx.isAuthenticated,
     login: ctx.login,
     loadTokenByWorkspace: ctx.loadTokenByWorkspace,
+    logout: ctx.logout,
   };
 };

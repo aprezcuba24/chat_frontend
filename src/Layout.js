@@ -32,7 +32,7 @@ const ChatLayout = () => {
   const { push } = useHistory();
   useEffect(() => {
     if (!isAuthenticated) {
-      push('/')
+      push('/login')
     }
   }, [isAuthenticated, push]);
   const { channels } = useAppContext();

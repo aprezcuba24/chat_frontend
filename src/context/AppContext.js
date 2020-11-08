@@ -6,7 +6,7 @@ import { useSecurityContext } from './SecurityContext';
 const AppContext = createContext();
 
 export const AppContextProvider = ({ children, ...props }) => {
-  const { isAuthenticated, loadTokenByWorkspace } = useSecurityContext();
+  const { isAuthenticated, loadTokenByWorkspace, logout } = useSecurityContext();
   const [workspaces, setWorkspaces] = useState([]);
   const [channels, setChannels] = useState([]);
   const [workspaceActive, setWorkspaceActive] = useState(null);
@@ -19,10 +19,15 @@ export const AppContextProvider = ({ children, ...props }) => {
       getWorkspaces().then(data => {
         const workspaces = data['hydra:member'];
         setWorkspaces(workspaces);
-        setWorkspaceActive(workspaces[0]);
+        changeWorkspace(workspaces[0]);
+      }).catch(error => {
+        const { status } = error.getData();
+        if (status === 401) {
+          logout();
+        }
       })
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, changeWorkspace, logout])
   useEffect(() => {
     if (workspaceActive) {
       getChannels().then(data => setChannels(data['hydra:member']))

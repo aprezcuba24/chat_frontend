@@ -1,3 +1,13 @@
+class ResponseError extends Error {
+  constructor(data) {
+    super();
+    this.data = data;
+  }
+  getData() {
+    return this.data;
+  }
+}
+
 export const request = async (url, data, method = 'GET', getJson = true) => {
   const headers = {
     'Content-Type': 'application/ld+json',
@@ -12,7 +22,10 @@ export const request = async (url, data, method = 'GET', getJson = true) => {
   }
   const response = await fetch(url, requestData);
   if (!response.ok) {
-    throw Error(response.statusText);
+    throw new ResponseError({
+      message: response.statusText,
+      status: parseInt(response.status),
+    });
   }
   if (getJson) {
     return response.json();
