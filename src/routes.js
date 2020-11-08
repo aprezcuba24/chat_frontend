@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Route, Switch, BrowserRouter as Router, } from 'react-router-dom';
 import Login from './pages/Login';
-import ChatLayout from './pages/chat';
+import Layout from './Layout';
 
 const Routes = () => {
   return (
@@ -11,7 +11,7 @@ const Routes = () => {
           <Login />
         </Route>
         <Route path="/">
-          <ChatLayout />
+          <Layout />
         </Route>
       </Switch>
     </Router>

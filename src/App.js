@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { AppContextProvider } from './context/AppContext';
 import { SecurityContextProvider } from './context/SecurityContext';
 import Routes from './routes';
 
@@ -10,9 +11,11 @@ const Container = styled.div`
 function App() {
   return (
     <SecurityContextProvider>
-      <Container>
-        <Routes />
-      </Container>
+      <AppContextProvider>
+        <Container>
+          <Routes />
+        </Container>
+      </AppContextProvider>
     </SecurityContextProvider>
   );
 }
