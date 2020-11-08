@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getWorkspaces } from '../services/chat';
+import { getChannels, getWorkspaces } from '../services/chat';
 import { useSecurityContext } from './SecurityContext';
 
 const AppContext = createContext();
@@ -8,6 +8,7 @@ const AppContext = createContext();
 export const AppContextProvider = ({ children, ...props }) => {
   const { isAuthenticated, loadTokenByWorkspace } = useSecurityContext();
   const [workspaces, setWorkspaces] = useState([]);
+  const [channels, setChannels] = useState([]);
   const [workspaceActive, setWorkspaceActive] = useState(null);
   const changeWorkspace = useCallback(async workspace => {
     await loadTokenByWorkspace(workspace);
@@ -22,12 +23,18 @@ export const AppContextProvider = ({ children, ...props }) => {
       })
     }
   }, [isAuthenticated])
+  useEffect(() => {
+    if (workspaceActive) {
+      getChannels().then(data => setChannels(data['hydra:member']))
+    }
+  }, [workspaceActive])
 
   return (
     <AppContext.Provider {...props} value={{
       workspaces,
       workspaceActive,
       changeWorkspace,
+      channels,
     }}>
       {children}
     </AppContext.Provider>
@@ -48,5 +55,6 @@ export const useAppContext = () => {
     workspaces: ctx.workspaces,
     changeWorkspace: ctx.changeWorkspace,
     workspaceActive: ctx.workspaceActive,
+    channels: ctx.channels,
   };
 };

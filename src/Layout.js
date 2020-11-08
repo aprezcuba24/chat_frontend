@@ -4,6 +4,7 @@ import { useSecurityContext } from './context/SecurityContext';
 import { Layout, Menu } from 'antd';
 import styled from 'styled-components';
 import Header from './components/Header';
+import { useAppContext } from './context/AppContext';
 
 const { Footer, Sider: SiderAntd } = Layout;
 
@@ -32,21 +33,18 @@ const ChatLayout = () => {
       push('/')
     }
   }, [isAuthenticated, push]);
+  const { channels } = useAppContext();
 
   return (
     <Layout>
       <Sider>
         <Logo />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
-          <Menu.Item key="1">
-            nav 1
-          </Menu.Item>
-          <Menu.Item key="2">
-            nav 2
-          </Menu.Item>
-          <Menu.Item key="3">
-            nav 3
-          </Menu.Item>
+          {channels.map(item => (
+            <Menu.Item key={item.id}>
+              {item.name}
+            </Menu.Item>
+          ))}
         </Menu>
       </Sider>
       <LayoutBody>
