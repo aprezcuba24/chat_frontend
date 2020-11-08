@@ -7,3 +7,7 @@ export const getWorkspaces = () => {
 export const getChannels = () => {
   return request('/api/channels')
 }
+
+export const getMessages = (channelId) => {
+  return request(`/api/channels/${channelId}/messages`);
+}

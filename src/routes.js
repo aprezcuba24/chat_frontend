@@ -7,12 +7,9 @@ const Routes = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/">
-          <Layout />
-        </Route>
+        <Route path="/login" component={Login} />
+        <Route path="/messages/:channelId" component={Layout} />
+        <Route exact path="/" component={Layout} />
       </Switch>
     </Router>
   );
