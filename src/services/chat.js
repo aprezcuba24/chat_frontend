@@ -11,3 +11,10 @@ export const getChannels = () => {
 export const getMessages = (channelId) => {
   return request(`/api/channels/${channelId}/messages`);
 }
+
+export const sendMessage = (body, channel) => {
+  return request('/api/messages', {
+    ...body,
+    channel,
+  }, 'POST');
+}

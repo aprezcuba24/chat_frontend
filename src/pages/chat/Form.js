@@ -1,43 +1,27 @@
-import React, { memo, useState, useEffect } from 'react';
-import { Form as FormAntd, Input, Button } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import React, { memo, useCallback } from 'react';
+import { Form, Input, Button } from 'antd';
 
-const Form = () => {
-  const [form] = FormAntd.useForm();
-  const [, forceUpdate] = useState();
-
-  // To disable submit button at the beginning.
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
-
-  const onFinish = values => {
-    console.log('Finish:', values);
-  };
+const FormComponent = ({ send }) => {
+  const [form] = Form.useForm();
+  const onFinish = useCallback(values => {
+    send(values)
+    form.resetFields();
+  }, [send, form]);
 
   return (
-    <FormAntd FormAntd={form} name="horizontal_login" layout="inline" onFinish={onFinish}>
-      <FormAntd.Item
+    <Form form={form} name="horizontal_login" layout="inline" onFinish={onFinish}>
+      <Form.Item
         name="body"
       >
-        <Input prefix={<UserOutlined className="site-FormAntd-item-icon" />} placeholder="Type a message" />
-      </FormAntd.Item>
-      <FormAntd.Item shouldUpdate={true}>
-        {() => (
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={
-              !form.isFieldsTouched(true) ||
-              form.getFieldsError().filter(({ errors }) => errors.length).length
-            }
-          >
-            Send
-          </Button>
-        )}
-      </FormAntd.Item>
-    </FormAntd>
+        <Input placeholder="Type a message" />
+      </Form.Item>
+      <Form.Item wrapperCol={{ offset: 6, span: 12 }}>
+        <Button type="primary" htmlType="submit">
+          Send
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
-export default memo(Form);
+export default memo(FormComponent);

@@ -14,7 +14,7 @@ const Layout = styled(LayoutAntd)`
 `;
 
 const Chat = () => {
-  const { changeChannel, channelActive, messages } = useChatContext();
+  const { changeChannel, channelActive, messages, sendMessage } = useChatContext();
   const { channelId } = useParams();
   useEffect(() => changeChannel(parseInt(channelId)), [channelId, changeChannel]);
 
@@ -25,7 +25,7 @@ const Chat = () => {
         {messages.map(item => <Message key={item.id} message={item} />)}
       </Layout>
       <Footer style={{ textAlign: 'center' }}>
-        <Form />
+        <Form send={sendMessage} />
       </Footer>
     </>
   );

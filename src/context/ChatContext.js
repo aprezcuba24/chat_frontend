@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAppContext } from './AppContext';
-import { getMessages } from '../services/chat';
+import { getMessages, sendMessage as sendMessageService } from '../services/chat';
 
 const ChatContext = createContext();
 
@@ -20,12 +20,16 @@ export const ChatContextProvider = ({ children, ...props }) => {
       setMessages([])
     }
   }, [channelActive])
+  const sendMessage = useCallback((body) => {
+    return sendMessageService(body, channelActive['@id']);
+  }, [channelActive])
 
   return (
     <ChatContext.Provider {...props} value={{
       channelActive,
       changeChannel,
       messages,
+      sendMessage,
     }}>
       {children}
     </ChatContext.Provider>
@@ -46,5 +50,6 @@ export const useChatContext = () => {
     channelActive: ctx.channelActive,
     changeChannel: ctx.changeChannel,
     messages: ctx.messages,
+    sendMessage: ctx.sendMessage,
   };
 };
