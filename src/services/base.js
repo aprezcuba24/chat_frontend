@@ -20,7 +20,7 @@ export const request = async (url, data, method = 'GET', getJson = true) => {
   if (data) {
     requestData['body'] = JSON.stringify(data);
   }
-  const response = await fetch(url, requestData);
+  const response = await fetch(`http://api.localhost:8080${url}`, requestData);
   if (!response.ok) {
     throw new ResponseError({
       message: response.statusText,

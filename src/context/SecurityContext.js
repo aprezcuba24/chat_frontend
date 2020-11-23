@@ -6,9 +6,11 @@ const SecurityContext = createContext();
 
 export const SecurityContextProvider = ({ children, ...props }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [securityData, setSecurityData] = useState();
   const loadTokenByWorkspace = useCallback(async workspace => {
-    const { token } = await getTokenByWorkspace(workspace);
-    localStorage.setItem('token', token);
+    const data = await getTokenByWorkspace(workspace);
+    setSecurityData(data);
+    localStorage.setItem('token', data.token);
   }, [])
   const login = useCallback(async (values) => {
     const { token } = await loginService(values);
@@ -32,6 +34,7 @@ export const SecurityContextProvider = ({ children, ...props }) => {
       login,
       loadTokenByWorkspace,
       logout,
+      securityData,
     }}>
       {children}
     </SecurityContext.Provider>
@@ -53,5 +56,6 @@ export const useSecurityContext = () => {
     login: ctx.login,
     loadTokenByWorkspace: ctx.loadTokenByWorkspace,
     logout: ctx.logout,
+    securityData: ctx.securityData,
   };
 };
