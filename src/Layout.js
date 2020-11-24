@@ -7,6 +7,7 @@ import Header from './components/Header';
 import { useAppContext } from './context/AppContext';
 import Chat from './pages/chat';
 import { ChatContextProvider } from './context/ChatContext';
+import ChannelItem from './pages/chat/ChannelItem';
 
 const { Sider: SiderAntd } = Layout;
 
@@ -45,7 +46,7 @@ const ChatLayout = () => {
           {channels.map(item => (
             <Menu.Item key={item.id}>
               <NavLink to={`/messages/${item.id}`}>
-                {item.name}
+                <ChannelItem channel={item} />
               </NavLink>
             </Menu.Item>
           ))}

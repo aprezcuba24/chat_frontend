@@ -10,6 +10,11 @@ export const AppContextProvider = ({ children, ...props }) => {
   const [workspaces, setWorkspaces] = useState([]);
   const [channels, setChannels] = useState([]);
   const [workspaceActive, setWorkspaceActive] = useState(null);
+  const [channelActive, setChannelActive] = useState();
+  const changeChannel = useCallback(id => {
+    const channel = channels.find(item => item.id === id);
+    setChannelActive(channel);
+  }, [channels]);
   const changeWorkspace = useCallback(async workspace => {
     await loadTokenByWorkspace(workspace);
     setWorkspaceActive(workspace);
@@ -40,6 +45,8 @@ export const AppContextProvider = ({ children, ...props }) => {
       workspaceActive,
       changeWorkspace,
       channels,
+      channelActive,
+      changeChannel,
     }}>
       {children}
     </AppContext.Provider>
@@ -61,5 +68,7 @@ export const useAppContext = () => {
     changeWorkspace: ctx.changeWorkspace,
     workspaceActive: ctx.workspaceActive,
     channels: ctx.channels,
+    channelActive: ctx.channelActive,
+    changeChannel: ctx.changeChannel,
   };
 };

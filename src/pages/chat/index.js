@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useChatContext } from '../../context/ChatContext';
 import Message from './Message';
 import styled from 'styled-components';
+import { useAppContext } from '../../context/AppContext';
 
 const { Footer } = LayoutAntd;
 
@@ -14,7 +15,8 @@ const Layout = styled(LayoutAntd)`
 `;
 
 const Chat = () => {
-  const { changeChannel, channelActive, messages, sendMessage } = useChatContext();
+  const { changeChannel, channelActive } = useAppContext();
+  const { messages, sendMessage } = useChatContext();
   const { channelId } = useParams();
   useEffect(() => changeChannel(parseInt(channelId)), [channelId, changeChannel]);
 

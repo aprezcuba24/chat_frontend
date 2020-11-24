@@ -2,20 +2,19 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import PropTypes from 'prop-types';
 import { useAppContext } from './AppContext';
 import { getMessages, sendMessage as sendMessageService } from '../services/chat';
-import { useSecurityContext } from './SecurityContext';
-import { useEventSource } from '../hooks/useEventSource';
+import { useEventSourceContext } from './EventContext';
 
 const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, ...props }) => {
-  const { channels } = useAppContext();
-  const [channelActive, setChannelActive] = useState();
+  const { channelActive } = useAppContext();
+  const { lastEvent } = useEventSourceContext();
   const [messages, setMessages] = useState([]);
-  const { securityData } = useSecurityContext();
-  const changeChannel = useCallback(id => {
-    const channel = channels.find(item => item.id === id);
-    setChannelActive(channel);
-  }, [channels]);
+  useEffect(() => {
+    if (lastEvent && channelActive && lastEvent.channel === channelActive['@id']) {
+      setMessages(prev => [lastEvent, ...prev])
+    }
+  }, [lastEvent, channelActive]);
   useEffect(() => {
     if (channelActive) {
       getMessages(channelActive.id).then(data => setMessages(data['hydra:member']));
@@ -26,15 +25,9 @@ export const ChatContextProvider = ({ children, ...props }) => {
   const sendMessage = useCallback((body) => {
     return sendMessageService(body, channelActive['@id']);
   }, [channelActive])
-  const listener = useCallback(event => {
-    console.log(JSON.parse(event.data));
-  }, []);
-  useEventSource(listener, securityData?.mercure);
 
   return (
     <ChatContext.Provider {...props} value={{
-      channelActive,
-      changeChannel,
       messages,
       sendMessage,
     }}>
@@ -54,8 +47,6 @@ export const useChatContext = () => {
   }
 
   return {
-    channelActive: ctx.channelActive,
-    changeChannel: ctx.changeChannel,
     messages: ctx.messages,
     sendMessage: ctx.sendMessage,
   };
